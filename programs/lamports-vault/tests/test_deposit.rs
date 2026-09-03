@@ -1,9 +1,7 @@
 mod common;
 
 use {
-    common::{
-        build_deposit_ix, fund, initialize_vault, send, setup_svm, vault_pda, ONE_SOL,
-    },
+    common::{build_deposit_ix, fund, initialize_vault, send, setup_svm, vault_pda, ONE_SOL},
     solana_keypair::Keypair,
     solana_signer::Signer,
 };
@@ -113,5 +111,8 @@ fn deposit_zero_lamports_succeeds_and_is_a_noop() {
     send(&mut svm, &user, &[ix], &[]).expect("zero-lamport deposit should succeed");
 
     let vault_after = svm.get_balance(&vault).unwrap_or_default();
-    assert_eq!(vault_after, vault_before, "vault balance should be unchanged");
+    assert_eq!(
+        vault_after, vault_before,
+        "vault balance should be unchanged"
+    );
 }

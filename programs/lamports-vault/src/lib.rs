@@ -6,9 +6,9 @@ pub mod state;
 use anchor_lang::prelude::*;
 
 pub use constants::*;
+pub use error::*;
 pub use instructions::*;
 pub use state::*;
-
 declare_id!("8hJ48kuf3NYwQ7L4Z92HFQLwyExxVrYLjQwALbqbH98V");
 
 #[program]

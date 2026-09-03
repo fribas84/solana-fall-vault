@@ -1,9 +1,7 @@
 mod common;
 
 use {
-    common::{
-        build_initialize_ix, fund, send, setup_svm, vault_pda, vault_state_pda, ONE_SOL,
-    },
+    common::{build_initialize_ix, fund, send, setup_svm, vault_pda, vault_state_pda, ONE_SOL},
     solana_keypair::Keypair,
     solana_signer::Signer,
 };
@@ -24,7 +22,10 @@ fn initialize_creates_vault_state_and_funds_vault() {
         .get_account(&vault_state)
         .expect("vault_state account should exist");
     assert_eq!(state_account.owner, lamports_vault::id());
-    assert!(state_account.lamports > 0, "vault_state must be rent-exempt");
+    assert!(
+        state_account.lamports > 0,
+        "vault_state must be rent-exempt"
+    );
 
     // Bytes 0..8 are the Anchor discriminator; bytes 8 and 9 hold the bumps in
     // VaultState field order: `vault_bump` (byte 8) then `bump` (byte 9).
@@ -66,8 +67,13 @@ fn initialize_with_separate_payers_creates_independent_vaults() {
     fund(&mut svm, &alice.pubkey(), 10 * ONE_SOL);
     fund(&mut svm, &bob.pubkey(), 10 * ONE_SOL);
 
-    send(&mut svm, &alice, &[build_initialize_ix(&alice.pubkey())], &[])
-        .expect("alice init should succeed");
+    send(
+        &mut svm,
+        &alice,
+        &[build_initialize_ix(&alice.pubkey())],
+        &[],
+    )
+    .expect("alice init should succeed");
     send(&mut svm, &bob, &[build_initialize_ix(&bob.pubkey())], &[])
         .expect("bob init should succeed");
 
