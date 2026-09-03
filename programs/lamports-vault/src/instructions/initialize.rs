@@ -23,7 +23,7 @@ pub struct Initialize<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn initialize_vault(ctx: Context<Initialize>) -> Result<()> {
+pub fn initialize_vault(ctx: Context<Initialize>, _max_withdraw:u64) -> Result<()> {
     msg!("Initializing vault for user: {}", ctx.accounts.user.key());
 
     let cpi_acccounts = anchor_lang::system_program::Transfer {
@@ -38,6 +38,7 @@ pub fn initialize_vault(ctx: Context<Initialize>) -> Result<()> {
     anchor_lang::system_program::transfer(cpi_ctx, rent)?;
 
     ctx.accounts.vault_state.set_inner(VaultState {
+        max_withdraw: _max_withdraw,
         vault_bump: ctx.bumps.vault, 
         bump: ctx.bumps.vault_state
     });
