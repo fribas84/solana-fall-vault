@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-use crate::{VaultState, VAULT_SEED, VAULT_STATE_SEED};
+use crate::{VaultState, VAULT_SEED, VAULT_STATE_SEED, VaultError};
 
 #[derive(Accounts)]
 pub struct Deposit<'info> {
@@ -22,6 +22,7 @@ pub struct Deposit<'info> {
 
 pub fn deposit_lamports(ctx: Context<Deposit>, amount: u64) -> Result<()> {
     msg!("Depositing lamports to vault");
+    require!(amount > 0, VaultError::ZeroAmount);
     let cpi_accounts = anchor_lang::system_program::Transfer {
         from: ctx.accounts.user.to_account_info(),
         to: ctx.accounts.vault.to_account_info(),
