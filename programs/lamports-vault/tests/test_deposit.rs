@@ -96,7 +96,9 @@ fn deposit_more_than_balance_fails() {
     );
 }
 
+
 #[test]
+#[ignore] // Ignoring test added a contraint in Program to have a deposit bigger than 0, doesnt make any sense maki 0 value deposits, rathen than creating an account
 fn deposit_zero_lamports_succeeds_and_is_a_noop() {
     let mut svm = setup_svm();
     let user = Keypair::new();
@@ -115,4 +117,18 @@ fn deposit_zero_lamports_succeeds_and_is_a_noop() {
         vault_after, vault_before,
         "vault balance should be unchanged"
     );
+}
+#[test]
+fn deposit_zero_amount_fails() {
+    let mut svm = setup_svm();
+    let user = Keypair::new();
+    fund(&mut svm, &user.pubkey(), 10 * ONE_SOL);
+    initialize_vault(&mut svm, &user, DEFAULT_MAX_WITHDRAW);
+    let res = send(
+        &mut svm,
+        &user,
+        &[build_deposit_ix(&user.pubkey(), 0)],
+        &[],
+    );
+    assert!(res.is_err(), "deposit of zero lamports must fail");
 }
